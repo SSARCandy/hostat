@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-  "github.com/fatih/color"
-  "github.com/shirou/gopsutil/mem"
-  "github.com/shirou/gopsutil/load"
+	"github.com/shirou/gopsutil/cpu"
+	"github.com/shirou/gopsutil/load"
+	"github.com/shirou/gopsutil/mem"
 )
 
 /**
@@ -15,10 +15,16 @@ import (
  */
 
 func main() {
-  red := color.New(color.FgRed).SprintFunc()
-  m, _ := mem.VirtualMemory()
-  l, _ := load.Avg()
+	// red := color.New(color.FgRed).SprintFunc()
+	m, _ := mem.VirtualMemory()
+	l, _ := load.Avg()
+	c, _ := cpu.Counts(true)
 
-  fmt.Printf("Total: %v, Free:%v, UsedPercent:%f%%\n", red(m.Total), m.Free, m.UsedPercent)
-  fmt.Printf("1m: %v, 5m: %v, 15m: %v\n", l.Load1, l.Load5, l.Load15)
+	// print header
+	fmt.Printf("%-10s |%5s |%7s |%7s |%7s |%8s |\n", "hostname", "CPUs", "1m", "5m", "15m", "memory%")
+
+	fmt.Printf("%-10s |", "ssarcandy")
+	fmt.Printf("%5v |", c)
+	fmt.Printf("%7.1f |%7.1f |%7.1f |", l.Load1, l.Load5, l.Load15)
+	fmt.Printf("%7.1f%% |\n", m.UsedPercent)
 }
