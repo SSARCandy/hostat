@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/logrusorgru/aurora"
+
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/load"
 	"github.com/shirou/gopsutil/mem"
@@ -29,7 +31,14 @@ func main() {
 
 	fmt.Printf("%-10s |", i.Hostname)
 	fmt.Printf("%5v |", c)
-	fmt.Printf("%7.1f |%7.1f |%7.1f |", l.Load1, l.Load5, l.Load15)
-	fmt.Printf("%7.1f%% |", m.UsedPercent)
-	fmt.Printf("%5.1f%% |\n", d.UsedPercent)
+	fmt.Printf("%7.1f |%7.1f |%7.1f |", RedScale(l.Load1, c), l.Load5, l.Load15)
+	fmt.Printf("%7.1f%% |", RedScale(m.UsedPercent, 80))
+	fmt.Printf("%5.1f%% |\n", RedScale(d.UsedPercent, 80))
+}
+
+func RedScale(v float64, thres int) aurora.Value {
+	if (v > float64(thres)) {
+		return aurora.Red(v)
+	}
+	return aurora.White(v)
 }
