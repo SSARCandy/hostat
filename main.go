@@ -61,7 +61,7 @@ func RedScale(v float64, thres int) aurora.Value {
 }
 
 func PrintSlurmInfo(nodename string) {
-	cmd := fmt.Sprintf("sinfo -o \"%N %.6D %P %6t %c\" -N | grep %s | awk '{print $4}'", nodename)
+	cmd := fmt.Sprintf("sinfo -o '%%N %%.6D %%P %%6t %%c' -N | grep %s | awk '{print $4}'", nodename)
 	out, _ := exec.Command("bash","-c",cmd).Output()
 	state := strings.TrimSpace(string(out))
 	fmt.Printf("%6s |", state)
@@ -75,6 +75,9 @@ func PrintSlurmQueue(nodename string) {
 	var jobs []string
 	for _, line := range lines {
 		tokens := strings.Split(strings.TrimSpace(string(line)), " ")
+		if len(tokens) < 3 {
+			return
+		}
 		job := fmt.Sprintf("%s(%s)", tokens[2], tokens[0])
 		jobs = append(jobs, job)
 	}
