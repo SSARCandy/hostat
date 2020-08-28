@@ -1,0 +1,11 @@
+NODELIST  NODES PARTITION STATE  CPUS
+cluster01      1 research* drain  8
+cluster02      1 research* mix    8
+cluster03      1 research* mix    8
+cluster04      1 research* mix    8
+cluster05      1 research* mix    8
+cluster06      1 research* mix    8
+cluster07      1 research* alloc  8
+cluster08      1 research* mix    8
+ssarcandy      1 research* idle*  8
+SSARCandy      1 research* comp   8

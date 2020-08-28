@@ -1,0 +1,13 @@
+Fri Aug 28 18:28:47 2020
+             JOBID PARTITION     NAME      USER    STATE       TIME TIME_LIMI  NODES NODELIST(REASON)
+           81237_3  research feature_ ssarcandy  RUNNING    2:56:44 UNLIMITED      1 cluster02
+           81238_3  research feature_ ssarcandy  RUNNING    2:56:49 UNLIMITED      1 cluster03
+           81239_3  research feature_ ssarcandy  RUNNING    2:56:29 UNLIMITED      1 cluster04
+           81240_3  research feature_ ssarcandy  RUNNING    2:50:31 UNLIMITED      1 cluster05
+           81241_3  research feature_ ssarcandy  RUNNING    2:55:54 UNLIMITED      1 cluster06
+           81242_3  research feature_ ssarcandy  RUNNING    2:48:41 UNLIMITED      1 cluster07
+           81243_5  research feature_ ssarcandy  RUNNING    2:40:08 UNLIMITED      1 cluster08
+           81243_4  research feature_ user123    RUNNING    2:47:18 UNLIMITED      1 SSARCandy
+           81243_3  research feature_ user123    RUNNING    2:49:11 UNLIMITED      1 SSARCandy
+           81244_3  research feature_ ssarcandy  RUNNING    2:53:50 UNLIMITED      1 ssarcandy
+           81261_3  research feature_ ssarcandy  RUNNING    2:54:50 UNLIMITED      1 SSARCandy
