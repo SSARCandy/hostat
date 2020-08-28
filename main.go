@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/logrusorgru/aurora"
 
@@ -25,15 +26,17 @@ func main() {
 	c, _ := cpu.Counts(true)
 	i, _ := host.Info()
 	d, _ := disk.Usage("/")
+	t, _ := host.Uptime()
 
 	// print header
-	fmt.Printf("%-10s |%5s |%7s |%7s |%7s |%8s |%6s |\n", "hostname", "CPUs", "1m", "5m", "15m", "memory%", "disk%")
+	fmt.Printf("%-10s |%5s |%7s |%7s |%7s |%8s |%6s |%9s |\n", "hostname", "CPUs", "1m", "5m", "15m", "memory%", "disk%", "UpTime")
 
 	fmt.Printf("%-10s |", i.Hostname)
 	fmt.Printf("%5v |", c)
-	fmt.Printf("%7.1f |%7.1f |%7.1f |", RedScale(l.Load1, c), l.Load5, l.Load15)
+	fmt.Printf("%7.1f |%7.1f |%7.1f |", RedScale(l.Load1, c), RedScale(l.Load5, c), RedScale(l.Load15, c))
 	fmt.Printf("%7.1f%% |", RedScale(m.UsedPercent, 80))
-	fmt.Printf("%5.1f%% |\n", RedScale(d.UsedPercent, 80))
+	fmt.Printf("%5.1f%% |", RedScale(d.UsedPercent, 80))
+	fmt.Printf("%9s |\n", time.Duration(t)*time.Second)
 }
 
 func RedScale(v float64, thres int) aurora.Value {
