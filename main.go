@@ -3,7 +3,6 @@ package main
 import (
 	"strings"
 	"fmt"
-	"time"
 	"os/exec"
 
 	"github.com/logrusorgru/aurora"
@@ -32,7 +31,7 @@ func main() {
 	_, err := exec.LookPath("sinfo")
 
 	// print header
-	fmt.Printf("%-10s |%5s |%7s |%7s |%7s |%8s |%6s |%9s |", "hostname", "CPUs", "1m", "5m", "15m", "memory%", "disk%", "UpTime")
+	fmt.Printf("%-10s |%5s |%7s |%7s |%7s |%8s |%6s |%7s |", "hostname", "CPUs", "1m", "5m", "15m", "memory%", "disk%", "UpTime")
 	if err == nil {
 		fmt.Printf("%6s | %s", "State", "Jobs")
 	}
@@ -41,9 +40,9 @@ func main() {
 	fmt.Printf("%-10s |", i.Hostname)
 	fmt.Printf("%5v |", c)
 	fmt.Printf("%7.1f |%7.1f |%7.1f |", RedScale(l.Load1, c), RedScale(l.Load5, c), RedScale(l.Load15, c))
-	fmt.Printf("%7.1f%% |", RedScale(m.UsedPercent, 80))
-	fmt.Printf("%5.1f%% |", RedScale(d.UsedPercent, 80))
-	fmt.Printf("%9s |", time.Duration(t)*time.Second)
+	fmt.Printf("%6.0f %% |", RedScale(m.UsedPercent, 80))
+	fmt.Printf("%4.0f %% |", RedScale(d.UsedPercent, 80))
+	fmt.Printf("%7s |", fmt.Sprintf("%v d", t/86400))
 
 	if err == nil {
 		PrintSlurmInfo(i.Hostname)
@@ -55,16 +54,25 @@ func main() {
 
 func RedScale(v float64, thres int) aurora.Value {
 	if v > float64(thres) {
-		return aurora.Red(v)
+		return aurora.BrightRed(v)
 	}
-	return aurora.White(v)
+	return aurora.Reset(v)
 }
 
 func PrintSlurmInfo(nodename string) {
 	cmd := fmt.Sprintf("sinfo -o '%%N %%.6D %%P %%6t %%c' -N | grep %s | awk '{print $4}'", nodename)
 	out, _ := exec.Command("bash","-c",cmd).Output()
 	state := strings.TrimSpace(string(out))
-	fmt.Printf("%6s |", state)
+
+	color := aurora.Reset
+	if state == "idle" || state == "mix" {
+		color = aurora.BrightGreen
+	} else if state == "drain" || state == "comp" {
+		color = aurora.BrightBlack
+	} else if strings.Contains(state, "*") {
+		color = aurora.BrightRed
+	}
+	fmt.Printf("%6s |", color(state).Bold())
 }
 
 func PrintSlurmQueue(nodename string) {
