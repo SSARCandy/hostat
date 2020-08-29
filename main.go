@@ -4,6 +4,8 @@ import (
 	"strings"
 	"fmt"
 	"os/exec"
+	
+    "flag"
 
 	"github.com/logrusorgru/aurora"
 
@@ -21,6 +23,9 @@ import (
  */
 
 func main() {
+	header := flag.Bool("header", true, "Print Header or not")
+	flag.Parse()
+
 	m, _ := mem.VirtualMemory()
 	l, _ := load.Avg()
 	c, _ := cpu.Counts(true)
@@ -30,18 +35,19 @@ func main() {
 
 	_, err := exec.LookPath("sinfo")
 
-	// print header
-	fmt.Printf("%-10s |%5s |%7s |%7s |%7s |%8s |%6s |%7s |", "hostname", "CPUs", "1m", "5m", "15m", "memory%", "disk%", "UpTime")
-	if err == nil {
-		fmt.Printf("%6s | %s", "State", "Jobs")
+	if *header {
+		fmt.Printf("%-10s |%5s |%7s |%7s |%7s |%9s |%7s |%7s |", "hostname", "CPUs", "1m", "5m", "15m", "memory %", "disk %", "UpTime")
+		if err == nil {
+			fmt.Printf("%6s | %s", "State", "Jobs")
+		}
+		fmt.Println("")
 	}
-	fmt.Println("")
 
 	fmt.Printf("%-10s |", i.Hostname)
 	fmt.Printf("%5v |", c)
 	fmt.Printf("%7.1f |%7.1f |%7.1f |", RedScale(l.Load1, c), RedScale(l.Load5, c), RedScale(l.Load15, c))
-	fmt.Printf("%6.0f %% |", RedScale(m.UsedPercent, 80))
-	fmt.Printf("%4.0f %% |", RedScale(d.UsedPercent, 80))
+	fmt.Printf("%7.0f %% |", RedScale(m.UsedPercent, 80))
+	fmt.Printf("%5.0f %% |", RedScale(d.UsedPercent, 80))
 	fmt.Printf("%7s |", fmt.Sprintf("%v d", t/86400))
 
 	if err == nil {
