@@ -9,4 +9,5 @@ require (
 	github.com/gookit/color v1.2.8 // indirect
 	github.com/logrusorgru/aurora v2.0.3+incompatible
 	github.com/shirou/gopsutil v2.20.6+incompatible
+	golang.org/x/sys v0.0.0-20200831180312-196b9ba8737a // indirect
 )
