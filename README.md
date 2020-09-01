@@ -2,7 +2,7 @@
 
 > **Host** + **Status** = **hostat**
 
-An easy tool to print out host status in one line. Support Slurm status also.
+An simple CLI tool to print out host status in one line. Support [slurm](https://slurm.schedmd.com/documentation.html) status also.
 
 ```sh
 $ hostat
@@ -39,7 +39,7 @@ Usage of hostat:
         Threshold for Memory. Render red color if >= thres (default 80)
 ```
 
-## Simple script to Render Cluster Dashboard
+## Fetch mulitple nodes status
 
 You can use [pdsh](https://linux.die.net/man/1/pdsh) to fetch multiple nodes status:
 
