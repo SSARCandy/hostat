@@ -23,15 +23,18 @@ import (
  */
 
 func main() {
-	header := flag.Bool("header", true, "Print Header or not")
-	flag.Parse()
-
 	m, _ := mem.VirtualMemory()
 	l, _ := load.Avg()
 	c, _ := cpu.Counts(true)
 	i, _ := host.Info()
 	d, _ := disk.Usage("/")
 	t, _ := host.Uptime()
+
+	header := flag.Bool("header", true, "Print Header or not")
+	thresMemory := flag.Int("thres_mem", 80, "Threshold for Memory. Render red color if >= thres")
+	thresDisk := flag.Int("thres_disk", 80, "Threshold for Disk. Render red color if >= thres")
+	thresLoad := flag.Int("thres_load", c, "Threshold for Load. Render red color if >= thres")
+	flag.Parse()
 
 	_, err := exec.LookPath("sinfo")
 
@@ -45,9 +48,9 @@ func main() {
 
 	fmt.Printf("%-10s |", i.Hostname)
 	fmt.Printf("%5v |", c)
-	fmt.Printf("%7.1f |%7.1f |%7.1f |", RedScale(l.Load1, c), RedScale(l.Load5, c), RedScale(l.Load15, c))
-	fmt.Printf("%7.0f %% |", RedScale(m.UsedPercent, 80))
-	fmt.Printf("%5.0f %% |", RedScale(d.UsedPercent, 80))
+	fmt.Printf("%7.1f |%7.1f |%7.1f |", RedScale(l.Load1, *thresLoad), RedScale(l.Load5, *thresLoad), RedScale(l.Load15, *thresLoad))
+	fmt.Printf("%7.0f %% |", RedScale(m.UsedPercent, *thresMemory))
+	fmt.Printf("%5.0f %% |", RedScale(d.UsedPercent, *thresDisk))
 	fmt.Printf("%7s |", fmt.Sprintf("%v d", t/86400))
 
 	if err == nil {
@@ -59,8 +62,8 @@ func main() {
 }
 
 func RedScale(v float64, thres int) aurora.Value {
-	if v > float64(thres) {
-		return aurora.BrightRed(v)
+	if v >= float64(thres) {
+		return aurora.BrightRed(v).Bold()
 	}
 	return aurora.Reset(v)
 }
