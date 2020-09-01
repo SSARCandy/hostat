@@ -2,7 +2,7 @@
 
 > **Host** + **Status** = **hostat**
 
-An simple CLI tool to print out host status in one line. Support [slurm](https://slurm.schedmd.com/documentation.html) status also.
+A simple CLI tool to print out host status in one line. Support [slurm](https://slurm.schedmd.com/documentation.html) status also.
 
 ```sh
 $ hostat
