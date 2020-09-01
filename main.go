@@ -1,22 +1,22 @@
 package main
 
 import (
-	"strings"
 	"fmt"
 	"os/exec"
-	
-    "flag"
+	"strings"
+
+	"flag"
 
 	"github.com/logrusorgru/aurora"
 
 	"github.com/shirou/gopsutil/cpu"
+	"github.com/shirou/gopsutil/disk"
+	"github.com/shirou/gopsutil/host"
 	"github.com/shirou/gopsutil/load"
 	"github.com/shirou/gopsutil/mem"
-	"github.com/shirou/gopsutil/host"
-	"github.com/shirou/gopsutil/disk"
 )
 
-/**
+/*
  * hostname  | CPUs | 1m Load | 5m Load | 15m Load | memory % | disk % | users | uptime | status | jobs
  * cluster01 |    8 |     1.1 |     1.5 |      2.1 |     60 % |   56 % |     2 | 16days |  alloc | ssarcandy(8)
  * cluster02 |    8 |     5.1 |     5.5 |      5.1 |     20 % |   96 % |     0 | 16days |  alloc | ssarcandy(8)
@@ -70,7 +70,7 @@ func RedScale(v float64, thres int) aurora.Value {
 
 func PrintSlurmInfo(nodename string) {
 	cmd := fmt.Sprintf("sinfo -o '%%N %%.6D %%P %%6t %%c' -N | grep %s | awk '{print $4}'", nodename)
-	out, _ := exec.Command("bash","-c",cmd).Output()
+	out, _ := exec.Command("bash", "-c", cmd).Output()
 	state := strings.TrimSpace(string(out))
 
 	color := aurora.Reset
@@ -86,7 +86,7 @@ func PrintSlurmInfo(nodename string) {
 
 func PrintSlurmQueue(nodename string) {
 	cmd := fmt.Sprintf("squeue -l | tail -n +3 | awk '$9 == \"%s\" {print $9\" \"$4}' | sort | uniq -c", nodename)
-	out, _ := exec.Command("bash","-c",cmd).Output()
+	out, _ := exec.Command("bash", "-c", cmd).Output()
 	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
 
 	var jobs []string
