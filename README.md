@@ -1,6 +1,6 @@
 # hostat
 
-> **Host** + **Status** = **Hostat**
+> **Host** + **Status** = **hostat**
 
 An easy tool to print out host status in one line. Support Slurm status also.
 
