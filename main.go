@@ -85,7 +85,7 @@ func PrintSlurmInfo(nodename string) {
 }
 
 func PrintSlurmQueue(nodename string) {
-	cmd := fmt.Sprintf("squeue -l | tail -n +3 | awk '$9 == \"%s\" {print $9\" \"$4}' | sort | uniq -c", nodename)
+	cmd := fmt.Sprintf("squeue -l -h | awk '$9 == \"%s\" {print $9\" \"$4}' | sort | uniq -c", nodename)
 	out, _ := exec.Command("bash", "-c", cmd).Output()
 	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
 
