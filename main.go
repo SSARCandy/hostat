@@ -21,6 +21,7 @@ import (
  * cluster01 |    8 |     1.1 |     1.5 |      2.1 |     60 % |   56 % |     2 | 16days |  alloc | ssarcandy(8)
  * cluster02 |    8 |     5.1 |     5.5 |      5.1 |     20 % |   96 % |     0 | 16days |  alloc | ssarcandy(8)
  */
+ */
 
 func main() {
 	m, _ := mem.VirtualMemory()
@@ -85,7 +86,7 @@ func PrintSlurmInfo(nodename string) {
 }
 
 func PrintSlurmQueue(nodename string) {
-	cmd := fmt.Sprintf("squeue -l | tail -n +3 | awk '$9 == \"%s\" {print $9\" \"$4}' | sort | uniq -c", nodename)
+	cmd := fmt.Sprintf("squeue -l -h | awk '$9 == \"%s\" {print $9\" \"$4}' | sort | uniq -c", nodename)
 	out, _ := exec.Command("bash", "-c", cmd).Output()
 	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
 
