@@ -1,16 +1,18 @@
 # hostat
 
+[![Go](https://github.com/SSARCandy/hostat/workflows/Go/badge.svg?branch=master)](https://github.com/SSARCandy/hostat/actions)
+
 > **Host** + **Status** = **hostat**
 
 A simple CLI tool to print out host status in one line. Support [slurm](https://slurm.schedmd.com/documentation.html) status also.
 
 ```sh
 $ hostat
-hostname   | CPUs |     1m |     5m |    15m | memory % | disk % | UpTime | State | Jobs
-cluster01  |    8 |    0.9 |    1.1 |    1.4 |     40 % |   19 % |    4 d | drain |
+hostname   | CPUs |     1m |     5m |    15m | memory % | disk % | UpTime |
+cluster01  |    8 |    0.9 |    1.1 |    1.4 |     40 % |   19 % |    4 d |
 ```
 
-## Install Release
+## Install
 
 Fetch the latest release for your platform:
 
@@ -39,7 +41,7 @@ Usage of hostat:
         Threshold for Memory. Render red color if >= thres (default 80)
 ```
 
-## Fetch mulitple nodes status
+## Fetch multiple nodes status
 
 You can use [pdsh](https://linux.die.net/man/1/pdsh) to fetch multiple nodes status:
 
