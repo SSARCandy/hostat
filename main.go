@@ -21,7 +21,6 @@ import (
  * cluster01 |    8 |     1.1 |     1.5 |      2.1 |     60 % |   56 % |     2 | 16days |  alloc | ssarcandy(8)
  * cluster02 |    8 |     5.1 |     5.5 |      5.1 |     20 % |   96 % |     0 | 16days |  alloc | ssarcandy(8)
  */
- */
 
 func main() {
 	m, _ := mem.VirtualMemory()
