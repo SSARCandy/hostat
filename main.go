@@ -29,6 +29,12 @@ func main() {
 	i, _ := host.Info()
 	d, _ := disk.Usage("/")
 	t, _ := host.Uptime()
+	p, _ := cpu.Info()
+
+	f := 0.
+	for _, c_inf := range p {
+		f += c_inf.Mhz
+	}
 
 	header := flag.Bool("header", true, "Print Header or not")
 	thresMemory := flag.Int("thres_mem", 80, "Threshold for Memory. Render red color if >= thres")
@@ -39,7 +45,7 @@ func main() {
 	_, err := exec.LookPath("sinfo")
 
 	if *header {
-		fmt.Printf("%-10s |%5s |%7s |%7s |%7s |%9s |%7s |%7s |", "hostname", "CPUs", "1m", "5m", "15m", "memory %", "disk %", "UpTime")
+		fmt.Printf("%-10s |%5s |%7s |%7s |%7s |%9s |%7s |%7s |%8s |", "hostname", "CPUs", "1m", "5m", "15m", "memory %", "disk %", "UpTime", "Avg Mhz")
 		if err == nil {
 			fmt.Printf("%6s | %s", "State", "Jobs")
 		}
@@ -52,6 +58,7 @@ func main() {
 	fmt.Printf("%7.0f %% |", RedScale(m.UsedPercent, *thresMemory))
 	fmt.Printf("%5.0f %% |", RedScale(d.UsedPercent, *thresDisk))
 	fmt.Printf("%7s |", fmt.Sprintf("%v d", t/86400))
+	fmt.Printf("%8.2f", f / float64(c))
 
 	if err == nil {
 		PrintSlurmInfo(i.Hostname)
