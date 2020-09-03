@@ -8,8 +8,8 @@ A simple CLI tool to print out host status in one line. Support [slurm](https://
 
 ```sh
 $ hostat
-hostname   | CPUs |     1m |     5m |    15m | memory % | disk % | UpTime |
-cluster01  |    8 |    0.9 |    1.1 |    1.4 |     40 % |   19 % |    4 d |
+hostname   | CPUs |     1m |     5m |    15m | memory % | disk % | UpTime | Avg Mhz |
+cluster01  |    8 |    0.9 |    1.1 |    1.4 |     40 % |   19 % |    4 d | 2283.42
 ```
 
 ## Install
@@ -47,9 +47,9 @@ You can use [pdsh](https://linux.die.net/man/1/pdsh) to fetch multiple nodes sta
 
 ```sh
 $ pdsh -w 'cluster[01-05]' -N -R ssh '/usr/local/bin/hostat --header=false' | sort 
-cluster01  |    8 |    1.3 |    1.2 |    1.4 |     40 % |   19 % |    4 d | drain |
-cluster02  |    8 |    8.0 |    8.0 |    8.0 |      8 % |   83 % |   77 d |  idle | 
-cluster03  |    8 |    8.0 |    8.1 |    8.0 |      7 % |   84 % |   77 d | alloc | ssarcandy(8)
-cluster04  |    8 |    8.1 |    8.0 |    8.0 |      7 % |   82 % |   77 d | alloc | ssarcandy(8)
-cluster05  |    8 |    8.2 |    8.1 |    8.1 |      7 % |   81 % |   77 d | alloc | ssarcandy(8)
+cluster01  |    8 |    1.3 |    1.2 |    1.4 |     40 % |   19 % |    4 d | Avg Mhz | drain |
+cluster02  |    8 |    8.0 |    8.0 |    8.0 |      8 % |   83 % |   77 d | 3900.00 |  idle | 
+cluster03  |    8 |    8.0 |    8.1 |    8.0 |      7 % |   84 % |   77 d | 3900.00 | alloc | ssarcandy(8)
+cluster04  |    8 |    8.1 |    8.0 |    8.0 |      7 % |   82 % |   77 d | 3900.00 | alloc | ssarcandy(8)
+cluster05  |    8 |    8.2 |    8.1 |    8.1 |      7 % |   81 % |   77 d | 3900.00 | alloc | ssarcandy(8)
 ```
