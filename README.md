@@ -9,7 +9,7 @@ A simple CLI tool to print out host status in one line. Support [slurm](https://
 ```sh
 $ hostat
 hostname   | CPUs |     1m |     5m |    15m | memory % | disk % | UpTime | Avg Mhz |
-cluster01  |    8 |    0.9 |    1.1 |    1.4 |     40 % |   19 % |    4 d | 2283.42
+cluster01  |    8 |    0.9 |    1.1 |    1.4 |     40 % |   19 % |    4 d | 2283.42 |
 ```
 
 ## Install
