@@ -48,13 +48,13 @@ func main() {
 		fmt.Println("")
 	}
 
-	fmt.Printf("%-10s |", i.Hostname)
+	fmt.Printf("%-10s |", i.Hostname[:10])
 	fmt.Printf("%5v |", c)
 	fmt.Printf("%7.1f |%7.1f |%7.1f |", RedScale(l.Load1, *thresLoad), RedScale(l.Load5, *thresLoad), RedScale(l.Load15, *thresLoad))
 	fmt.Printf("%7.0f %% |", RedScale(m.UsedPercent, *thresMemory))
 	fmt.Printf("%5.0f %% |", RedScale(d.UsedPercent, *thresDisk))
 	fmt.Printf("%7s |", fmt.Sprintf("%v d", t/86400))
-	fmt.Printf("%8.2f |", f / float64(c))
+	fmt.Printf("%8.2f |", f/float64(c))
 
 	if err == nil {
 		PrintSlurmInfo(i.Hostname)
