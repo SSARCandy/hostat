@@ -48,7 +48,12 @@ func main() {
 		fmt.Println("")
 	}
 
-	fmt.Printf("%-10s |", i.Hostname[:10])
+	adjName := i.Hostname
+	if len(adjName) > 10 {
+		adjName = adjName[:10]
+	}
+
+	fmt.Printf("%-10s |", adjName)
 	fmt.Printf("%5v |", c)
 	fmt.Printf("%7.1f |%7.1f |%7.1f |", RedScale(l.Load1, *thresLoad), RedScale(l.Load5, *thresLoad), RedScale(l.Load15, *thresLoad))
 	fmt.Printf("%7.0f %% |", RedScale(m.UsedPercent, *thresMemory))
