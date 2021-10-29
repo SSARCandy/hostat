@@ -17,9 +17,9 @@ import (
 )
 
 /*
- * hostname  | CPUs | 1m Load | 5m Load | 15m Load | memory % | disk % | users | uptime | status | jobs
- * cluster01 |    8 |     1.1 |     1.5 |      2.1 |     60 % |   56 % |     2 | 16days |  alloc | ssarcandy(8)
- * cluster02 |    8 |     5.1 |     5.5 |      5.1 |     20 % |   96 % |     0 | 16days |  alloc | ssarcandy(8)
+ * hostname  | CPUs | 1m Load | 5m Load | 15m Load | memory % | disk % | users | uptime | Avg Mhz | status | jobs
+ * cluster01 |    8 |     1.1 |     1.5 |      2.1 |     60 % |   56 % |     2 | 16days | 2283.42 |  alloc | ssarcandy(8)
+ * cluster02 |    8 |     5.1 |     5.5 |      5.1 |     20 % |   96 % |     0 | 16days | 2283.42 |  alloc | ssarcandy(8)
  */
 
 func main() {
@@ -30,6 +30,8 @@ func main() {
 	d, _ := disk.Usage("/")
 	t, _ := host.Uptime()
 
+	f := GetTotalCpuMhz()
+
 	header := flag.Bool("header", true, "Print Header or not")
 	thresMemory := flag.Int("thres_mem", 80, "Threshold for Memory. Render red color if >= thres")
 	thresDisk := flag.Int("thres_disk", 80, "Threshold for Disk. Render red color if >= thres")
@@ -39,19 +41,25 @@ func main() {
 	_, err := exec.LookPath("sinfo")
 
 	if *header {
-		fmt.Printf("%-10s |%5s |%7s |%7s |%7s |%9s |%7s |%7s |", "hostname", "CPUs", "1m", "5m", "15m", "memory %", "disk %", "UpTime")
+		fmt.Printf("%-10s |%5s |%7s |%7s |%7s |%9s |%7s |%7s |%8s |", "hostname", "CPUs", "1m", "5m", "15m", "memory %", "disk %", "UpTime", "Avg Mhz")
 		if err == nil {
 			fmt.Printf("%6s | %s", "State", "Jobs")
 		}
 		fmt.Println("")
 	}
 
-	fmt.Printf("%-10s |", i.Hostname)
+	adjName := i.Hostname
+	if len(adjName) > 10 {
+		adjName = adjName[:10]
+	}
+
+	fmt.Printf("%-10s |", adjName)
 	fmt.Printf("%5v |", c)
 	fmt.Printf("%7.1f |%7.1f |%7.1f |", RedScale(l.Load1, *thresLoad), RedScale(l.Load5, *thresLoad), RedScale(l.Load15, *thresLoad))
 	fmt.Printf("%7.0f %% |", RedScale(m.UsedPercent, *thresMemory))
 	fmt.Printf("%5.0f %% |", RedScale(d.UsedPercent, *thresDisk))
 	fmt.Printf("%7s |", fmt.Sprintf("%v d", t/86400))
+	fmt.Printf("%8.2f |", f/float64(c))
 
 	if err == nil {
 		PrintSlurmInfo(i.Hostname)
@@ -59,6 +67,15 @@ func main() {
 	}
 
 	fmt.Println("")
+}
+
+func GetTotalCpuMhz() float64 {
+	Mhz := 0.
+	p, _ := cpu.Info()
+	for _, cpu_inf := range p {
+		Mhz += cpu_inf.Mhz
+	}
+	return Mhz
 }
 
 func RedScale(v float64, thres int) aurora.Value {
