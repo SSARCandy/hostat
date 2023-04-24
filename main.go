@@ -2,12 +2,8 @@ package main
 
 import (
 	"fmt"
-	"os/exec"
-	"strings"
-
 	"flag"
-
-	"github.com/logrusorgru/aurora"
+    "os/exec"
 
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
@@ -34,6 +30,7 @@ func main() {
 	thresMemory := flag.Int("thres_mem", 80, "Threshold for Memory. Render red color if >= thres")
 	thresDisk := flag.Int("thres_disk", 80, "Threshold for Disk. Render red color if >= thres")
 	thresLoad := flag.Int("thres_load", c, "Threshold for Load. Render red color if >= thres")
+	hosts := flag.String("hosts", "localhost", "Target hosts in range expression, i.e. host[01-99]")
 	flag.Parse()
 
 	_, err := exec.LookPath("sinfo")
@@ -59,44 +56,13 @@ func main() {
 	}
 
 	fmt.Println("")
-}
 
-func RedScale(v float64, thres int) aurora.Value {
-	if v >= float64(thres) {
-		return aurora.BrightRed(v).Bold()
+	// Example usage
+	strings, err := ExpandRange(*hosts)
+	if err != nil {
+		fmt.Printf("error: %s\n", err)
+	} else {
+		fmt.Println(strings)
 	}
-	return aurora.Reset(v)
 }
 
-func PrintSlurmInfo(nodename string) {
-	cmd := fmt.Sprintf("sinfo -o '%%N %%.6D %%P %%6t %%c' -N | grep %s | awk '{print $4}'", nodename)
-	out, _ := exec.Command("bash", "-c", cmd).Output()
-	state := strings.TrimSpace(string(out))
-
-	color := aurora.Reset
-	if state == "idle" || state == "mix" {
-		color = aurora.BrightGreen
-	} else if state == "drain" || state == "comp" {
-		color = aurora.BrightBlack
-	} else if strings.Contains(state, "*") {
-		color = aurora.BrightRed
-	}
-	fmt.Printf("%6s |", color(state).Bold())
-}
-
-func PrintSlurmQueue(nodename string) {
-	cmd := fmt.Sprintf("squeue -o '%%u %%R' -h | awk '$2==\"%s\" {print $2\" \"$1}'  | sort | uniq -c", nodename)
-	out, _ := exec.Command("bash", "-c", cmd).Output()
-	lines := strings.Split(strings.TrimSpace(string(out)), "\n")
-
-	var jobs []string
-	for _, line := range lines {
-		tokens := strings.Split(strings.TrimSpace(string(line)), " ")
-		if len(tokens) < 3 {
-			return
-		}
-		job := fmt.Sprintf("%s(%s)", tokens[2], tokens[0])
-		jobs = append(jobs, job)
-	}
-	fmt.Printf(" %s", strings.Join(jobs, ", "))
-}
